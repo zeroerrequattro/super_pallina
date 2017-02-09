@@ -10,10 +10,7 @@ public class sky : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-
 		RenderSettings.skybox = material1;
-
 	}
 	
 	// Update is called once per frame

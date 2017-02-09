@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour {
 
-
+	public moveControls mC;
 	public float moveSpeed;
 	public Rigidbody Rb;
 	public GameObject tower;
@@ -27,44 +27,52 @@ public class PlayerMove : MonoBehaviour {
 
 	}
 	void Update(){
-		//input laterali
-		if (Input.GetKeyDown (KeyCode.A) && xPosition != -4) {
-			moveCheck = true;
-			xPosition -= 2;
-			Debug.Log (xPosition);
-		}
-		if (Input.GetKeyDown (KeyCode.D) && xPosition != 4) {
-			moveCheck = true;
-			xPosition += 2;
-			Debug.Log (xPosition);
-		}
-		//pallagira
-		/*
-		if (Input.GetKeyDown (KeyCode.D)&& xPosition == 4 && moveCheck==false){
+		
+		// Movimento a Sx
+		if (mC.moveLeft) {
 			
-			rotation -= 90;
+			// Se la posizione NON e' -4 
+			// sposta la pallina
+			if (xPosition != -4) {
+				moveCheck = true;
+				xPosition -= 2;
+				Debug.Log (xPosition);
+			} else {
+				
+			// Altrimenti controlla se 
+			// la variabile moveCheck
+			// e' falsa e ruota la colonna
+				if (!moveCheck) {
+					xPosition = 4;
+					rotation -= 90;
+					Debug.Log (rotation);
+				}
+			}
+		}
 
-			Debug.Log(rotation);
-		}
-		if (Input.GetKeyDown (KeyCode.A)&& xPosition == -4 && moveCheck==false){
-			
-			rotation += 90;
+		// Movimento a Dx
+		if (mC.moveRight) {
 
-			Debug.Log(rotation);
-		}
-*/
-		//tuttogira
-		if (Input.GetKeyDown (KeyCode.D)&& xPosition == 4 && moveCheck==false){
-			xPosition = -4;
-			rotation += 90;
-			Debug.Log(rotation);
-		}
-		if (Input.GetKeyDown (KeyCode.A)&& xPosition == -4 && moveCheck==false){
-			xPosition = 4;
-			rotation -= 90;
-			Debug.Log(rotation);
+			// Se la posizione NON e' 4 
+			// sposta la pallina
+			if (xPosition != 4) {
+				moveCheck = true;
+				xPosition += 2;
+				Debug.Log (xPosition);
+			} else {
+				
+			// Altrimenti controlla se 
+			// la variabile moveCheck
+			// e' falsa e ruota la colonna
+				if (!moveCheck) {
+					xPosition = -4;
+					rotation += 90;
+					Debug.Log (rotation);
+				}
+			}
 		}
 	}
+
 	// Update is called once per frame
 	void FixedUpdate () {
 		moveCheck = false;
@@ -72,7 +80,8 @@ public class PlayerMove : MonoBehaviour {
 		Vector3 pos = Rb.position;
 		pos.x = Mathf.MoveTowards (pos.x, xPosition, drift * Time.deltaTime);
 		Rb.position = pos;
-		/*
+
+/*
 		Vector3 rot = transform.eulerAngles;
 		float angle = Mathf.MoveTowardsAngle (transform.eulerAngles.y, rotation, rotationDrift * Time.deltaTime);
 		transform.eulerAngles = new Vector3 (0, angle, 0);
@@ -83,37 +92,23 @@ public class PlayerMove : MonoBehaviour {
 		float angle = Mathf.MoveTowardsAngle (tower.transform.eulerAngles.y, rotation, rotationDrift * Time.deltaTime);
 		//l'angolo è uguale all'interpolazione da il punto in cui si trova al target
 		tower.transform.eulerAngles = new Vector3(0,angle,0);
-	   //il punto in cui si trova è uguale a sto vector3
+	    //il punto in cui si trova è uguale a sto vector3
 	
-
-
-	
-
-
-
-
-
-//salto
-		if(Input.GetKeyDown (KeyCode.Space) && jumpOn == true){
+		//salto
+		if(mC.moveJump && jumpOn == true){
 
 			Rb.AddForce (Vector3.up * jumpForce, ForceMode.Impulse);
 			jumpOn = false;
 
-
 		}
 	}
 
-
-	  void OnTriggerEnter(Collider collision){
-
-
+	void OnTriggerEnter(Collider collision){
+		
 		if (collision.gameObject.tag == "jumpPick") {
 			Debug.Log ("jumpPick");
 			jumpOn = true;
 		
 		}
-	
-
 	}
-
 }

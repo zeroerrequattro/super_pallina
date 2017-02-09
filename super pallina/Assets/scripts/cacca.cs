@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class cacca : MonoBehaviour {
+	public moveControls mC;
 	public Rigidbody rb;
 	private float posX;
 	public GameObject ball;
@@ -13,10 +14,10 @@ public class cacca : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.A)) {
+		if ( mC.moveLeft ) {
 			transform.Translate (Vector3.left*2);
 		}
-		if (Input.GetKeyDown (KeyCode.D)) {
+		if ( mC.moveRight ) {
 			transform.Translate (Vector3.right*2);
 		}
 	
