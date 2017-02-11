@@ -5,38 +5,50 @@ using UnityEngine;
 public class moving_cubes : MonoBehaviour {
 
 	private bool trigger;
-	public float maximum; 
-	static float t = 0.0f;
+	private float duration;
+
+	public float startPosition;
+	private float endPosition;
+
+	static float t;
 
 	// Use this for initialization
 	void Start () {
 		trigger = false;
-		maximum = transform.position.z - 3f;
+		duration = 8.0f;
+
+		startPosition = transform.localPosition.z;
+		endPosition	= transform.localPosition.z - 3f;
+
+		t = 0.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (trigger == true){
-			
-			transform.position = new Vector3(
-				transform.position.x,
-				transform.position.y,
-				Mathf.Lerp(
-					transform.position.z,
-					maximum,
-					t
+		if (trigger) {
+			t += Time.deltaTime;
+
+			transform.localPosition = new Vector3 (
+				transform.localPosition.x,
+				transform.localPosition.y,
+				Mathf.Lerp (
+					startPosition,
+					endPosition,
+					t * duration
 				)
 			);
+		}
 
-			t += 0.3f * Time.deltaTime;
+		if (transform.localPosition.z == endPosition) {
 		}
 	}
 
 	void OnTriggerEnter(Collider collision){
 
-		if (collision.gameObject.tag == "Player") {
+		if (collision.gameObject.tag == "Player" && transform.localPosition.z != endPosition) {
 			Debug.Log ("Cube entered");
 			trigger = true;
+			t = 0.0f;
 		}
 	}
 }
