@@ -8,12 +8,14 @@ public class PlayerMove : MonoBehaviour {
 	public float moveSpeed;
 	public Rigidbody Rb;
 //	public GameObject tower;
-	private float xPosition;
-//	private float rotation;
 	public float drift;
 	public float rotationDrift;
 	public float jumpForce;
+	public Animator AnimPlayer;
+
 //	private bool moveCheck;
+//	private float rotation;
+	private float xPosition;
 	private bool jumpOn;
 	private TrailRenderer trail;
 
@@ -23,7 +25,6 @@ public class PlayerMove : MonoBehaviour {
 		Rb = GetComponent <Rigidbody> ();
 		xPosition = Rb.position.x;
 		jumpOn = true;
-
 
 	}
 	void Update(){
@@ -95,7 +96,8 @@ public class PlayerMove : MonoBehaviour {
 		//salto
 		if(mC.moveJump && jumpOn){
 			Rb.AddForce (Vector3.up * jumpForce, ForceMode.Impulse);
-			//jumpOn = false;
+			AnimPlayer.SetTrigger ("PallinaJump");
+			jumpOn = false;
 		}
 	}
 
