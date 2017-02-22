@@ -17,11 +17,11 @@ public class cubes_normal : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//float lerp = Mathf.PingPong (Time.time, duration) / duration;
-		//rend.material.Lerp (material1, material2, lerp);
+		float lerp = Mathf.PingPong (Time.time, duration) / duration;
+		rend.material.Lerp (material1, material2, lerp);
 	}
 
 	void Random (){
-	//	Random.Range (2.0f, 3.0f);
+		//Random.Range (2.0f, 3.0f);
 	}
 }
