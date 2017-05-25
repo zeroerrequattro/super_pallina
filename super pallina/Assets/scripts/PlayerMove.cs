@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+[RequireComponent(typeof(AudioSource))]
 public class PlayerMove : MonoBehaviour {
 
 	public moveControls mC;
@@ -14,6 +15,11 @@ public class PlayerMove : MonoBehaviour {
 	public float pushForce;
 	int comboCount;
 	public Text comboText;
+	public AudioClip JumpSound;
+	public AudioClip JpickSound;
+	public AudioClip PpickSound;
+	public GameObject halo;
+	AudioSource audio;
 
 //	private bool moveCheck;
 //	private float rotation;
@@ -23,7 +29,7 @@ public class PlayerMove : MonoBehaviour {
 	public Animator AnimPlayer;
 	// Use this for initialization
 	void Start () {
-		
+		audio = GetComponent<AudioSource> ();
 		Rb = GetComponent <Rigidbody> ();
 		xPosition = Rb.position.x;
 		jumpOn = true;
@@ -33,6 +39,15 @@ public class PlayerMove : MonoBehaviour {
 	void Update(){
 		string comboString = comboCount.ToString ();
 		comboText.text = "COMBO: " + comboString + "!";
+
+		if(mC.moveJump && jumpOn){
+			//Rb.AddForce (Vector3.up * jumpForce, ForceMode.Impulse);
+			Rb.velocity = new Vector3 (0,15);
+
+			AnimPlayer.SetTrigger ("PallinaJump");
+			jumpOn = false;
+			audio.PlayOneShot (JumpSound);
+		}
 		
 		// Movimento a Sx
 		if (mC.moveLeft) {
@@ -83,6 +98,12 @@ public class PlayerMove : MonoBehaviour {
 		}
 
 
+		if (jumpOn == true) {
+			halo.SetActive  (true);
+		} else {
+			halo.SetActive (false);
+		}
+
 
 	}
 
@@ -100,11 +121,7 @@ public class PlayerMove : MonoBehaviour {
 		//l'angolo è uguale all'interpolazione da il punto in cui si trova al target
 //		tower.transform.eulerAngles = new Vector3(0,angle,0);
 	    //il punto in cui si trova è uguale a sto vector3
-		if(mC.moveJump && jumpOn){
-			Rb.AddForce (Vector3.up * jumpForce, ForceMode.Impulse);
-			AnimPlayer.SetTrigger ("PallinaJump");
-			jumpOn = false;
-		}
+	
 
 	}
 
@@ -112,6 +129,7 @@ public class PlayerMove : MonoBehaviour {
 		
 		if (collision.gameObject.tag == "jumpPick") {
 			comboCount = comboCount + 1;
+			audio.PlayOneShot (JpickSound);
 			if (!jumpOn) {
 				Debug.Log ("jump enabled");
 				Debug.Log (comboCount);
@@ -121,8 +139,10 @@ public class PlayerMove : MonoBehaviour {
 
 		if (collision.gameObject.tag == "pushPick") {
 			Debug.Log ("push!");
-			Rb.AddForce (Vector3.up * pushForce, ForceMode.Impulse);
+			//Rb.AddForce (Vector3.up * pushForce, ForceMode.Impulse);
+			Rb.velocity = new Vector3(0,15);
 			comboCount = 0;
+			audio.PlayOneShot (PpickSound);
 		}
 	} 
 }
